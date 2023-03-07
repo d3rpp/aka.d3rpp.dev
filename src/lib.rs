@@ -46,7 +46,7 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
                 let item = namespace.get(s.as_str()).text().await?;
 
                 if let Some(url) = item {
-                    Response::redirect_with_status(Url::parse(&url)?, 301)
+                    Response::redirect_with_status(Url::parse(&url)?, 302)
                 } else {
                     Response::error("Unknown URL", 404)
                 }
