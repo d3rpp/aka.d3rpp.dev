@@ -8,7 +8,7 @@ export default {
 
 		// Root URL
 		if (path == '') {
-			return Response.redirect('https://d3rpp.dev');
+			return Response.redirect('https://d3rpp.dev/aka');
 		}
 
 		if (SLUG.test(path)) {
