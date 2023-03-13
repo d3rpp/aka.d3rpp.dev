@@ -4,7 +4,13 @@ const DOMAIN = /^https?\:\/\/([a-z0-9].?)+\//;
 
 export default {
 	async fetch(request: Request, env: Env, _ctx: ExecutionContext) {
-		let path = request.url.replace(DOMAIN, '');
+		let path = decodeURIComponent(request.url.replace(DOMAIN, '').split('?')[0]);
+
+		console.log(path);
+
+		if (path == 'favicon.ico') {
+			return new Response(null, { status: 404 });
+		}
 
 		// Root URL
 		if (path == '') {
