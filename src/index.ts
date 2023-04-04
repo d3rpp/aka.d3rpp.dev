@@ -1,10 +1,8 @@
-const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/g;
-
-const DOMAIN = /^https?\:\/\/([a-z0-9].?)+\//;
+import slugify from 'slugify';
 
 export default {
 	async fetch(request: Request, env: Env, _ctx: ExecutionContext) {
-		let path = decodeURIComponent(request.url.replace(DOMAIN, '').split('?')[0]);
+		const path = new URL(request.url).pathname.split("/")[1];
 
 		console.log(path);
 
@@ -17,18 +15,21 @@ export default {
 			return Response.redirect('https://d3rpp.dev/aka');
 		}
 
-		if (SLUG.test(path)) {
-			// tested to be slug, valid
-			let return_value = await env.URLS.get(path, 'text');
+		const slug = slugify(decodeURIComponent(path), {
+			lower: true,
+			strict: true,
+			locale: 'en',
+			trim: true
+		});
 
-			if (return_value === null) {
-				return new Response(null, { status: 404 });
-			} else {
-				return Response.redirect(return_value);
-			}
+		console.log(slug);
+
+		let return_value = await env.URLS.get(path, 'text');
+
+		if (return_value === null) {
+			return new Response(null, { status: 404 });
 		} else {
-			// invalid slug
-			return new Response('Bad Request', { status: 400 });
+			return Response.redirect(return_value);
 		}
 	},
 };
